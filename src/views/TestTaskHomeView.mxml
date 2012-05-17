@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		creationComplete="start()" overlayControls="false" title="Test_Task" >
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import com.inoel.ane.speech.Speech;
+			import com.inoel.ane.speech.speechToTextEvent;
+			
+			import mx.events.ResizeEvent;
+			
+			
+			
+			
+			
+			private var sp1:Speech;
+			private var called:Boolean = false;
+			private var lft: String = "left";
+			private var rgt: String = "right";
+			private var cen: String = "center";
+			private var bot: String = "bottom";
+			private var tp: String = "top" ;
+			private var mov : String ;
+			private var count:int=0;
+			
+			// create instance of speech class
+			private function start() : void{
+				sp1= new Speech("Try Something :) ");
+				this.addEventListener(ResizeEvent.RESIZE,moveit);
+			}
+			
+			
+
+			// attach listeners and start listening
+			private function init(event:Event): void {
+				
+				
+				
+				 if (sp1.isSupported)
+				 {
+					 if(!called)
+					 {
+					 called=true;
+					 sp1.addEventListener(speechToTextEvent.VOICE_RECOGNIZED,recognized);
+					 sp1.addEventListener(speechToTextEvent.VOICE_NOT_RECOGNIZED,unrecognized);
+					 sp1.listen();
+					 }
+					 else 
+					 {
+						 sp1.listen();
+						
+					 }
+				 }
+				
+			}
+			// if voice is recognized then ball is moved accordingly
+			private function recognized(event:speechToTextEvent) : void 
+			{
+			
+				mov = event.data;
+				moveit();
+			}
+			
+			// if some problem is there then error is printed
+			private function unrecognized(event:speechToTextEvent) : void
+			{
+				lb1.text="PROBLEM :(" + String(event.data);
+				
+			}
+			
+			// move the ball according to what user said and display the message if not word does not match move "keywords"
+			private function moveit(event:Event=null): void{
+			 	lb1.text=" " ;
+				
+				
+				switch(mov)
+				{
+					case lft :
+						bl1.move(0,screen.height/2 -bl1.height);
+						break;
+					case rgt :
+						bl1.move( screen.width -bl1.width,screen.height/2 -bl1.height);
+						break;
+						
+					case cen:
+						bl1.move(screen.width/2 -bl1.width,screen.height/2 -bl1.height);
+						break;
+					case bot:
+						bl1.move(screen.width/2 -bl1.width,screen.height -(bl1.height)*2);
+						break;
+					case tp :
+						bl1.move(screen.width/2 - bl1.width,0);
+						break;
+					default:
+							lb1.text =" Did not match please try again !! ";
+				}
+				
+				
+			}
+			
+			
+		
+			
+		]]>
+	</fx:Script>
+	
+	<s:Button id="bt1" x="124" y="171" width="71" label="Move" click="init(event)"/>
+	
+	<s:Label id="lb1" x="140" y="32" width="132"
+			 text="Say Left,Right,Bottom, top or Center to move Ball Accordingly after pressing move Button."/>
+	
+	
+
+	
+	<s:Image id="bl1" x="97" y="86" width="35" height="32" scaleMode="letterbox" smooth="true"
+			 source="pic/ball.jpg"/>
+	
+</s:View>

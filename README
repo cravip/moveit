@@ -1,0 +1,5 @@
+This app uses google's speech api to move the ball through user's voice.
+
+say left,right,top,bottom or center to move the ball accordingly.
+
+
